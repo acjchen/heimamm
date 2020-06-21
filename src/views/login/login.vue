@@ -22,12 +22,17 @@
           ></el-input>
         </el-form-item>
         <el-form-item prop="code">
-          <el-col :span="17">
+          <el-col :span="16">
             <el-input v-model="loginForm.code" placeholder="请输入验证码" prefix-icon="el-icon-key"></el-input>
           </el-col>
-          <el-col :span="7">
+          <el-col :span="7" :offset="1">
             <!-- 验证码图片 -->
-            <img :src="actions" class="captcha" @click="randomLoginCaptcha" alt />
+            <img
+              src="http://127.0.0.1/heimamm/public/captcha?type=login"
+              class="captcha"
+              ref="captcha"
+              @click="getRandomCode"
+            />
           </el-col>
         </el-form-item>
         <!-- 协议复选框 -->
@@ -47,12 +52,19 @@
     </div>
     <!-- 右侧图片 -->
     <div class="right">
-      <img src="../../assets/login_bg.png" alt />
+      <img src="../../assets/login_bg.png" />
     </div>
   </div>
 </template>
 
 <script>
+// 导入登录接口
+import { login } from "@/api/login.js";
+// import axios from 'axios';
+// 导入验证逻辑
+import { checkMobile, checkAgree} from '@/utils/validator.js';
+// 数据 获取的接口
+import { setToken } from "@/utils/token.js";
 export default {
   name: "login",
   data() {
@@ -94,10 +106,16 @@ export default {
             this.router.push("/index");
           });
         } else {
-         this.$message.warning("请检查输入的内容");
-         return false;
+          this.$message.warning("请检查输入的内容");
+          return false;
         }
       });
+    },
+    getRandomCode() {
+      // 时间戳
+      this.$refs.captcha.src = `http://127.0.0.1/heimamm/public/captcha?type=login&${Date.now()}`;
+      // 随机数
+      // this.$refs.captcha.src=`http://127.0.0.1/heimamm/public/captcha?type=login&${Math.random()}`
     }
   }
 };
@@ -143,6 +161,10 @@ export default {
       margin-top: 26px;
       .el-form-item {
         margin-bottom: 26px;
+      }
+      .captcha {
+        width: 110px;
+        height: 42px;
       }
       .el-button {
         width: 100%;
