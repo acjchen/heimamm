@@ -11,7 +11,7 @@ Vue.use(ElementUI);
 
 
 // 导入全局样式
-// import "@/styles/base.less";
+import "@/styles/base.less";
 
 
 //是否显示生产环境
